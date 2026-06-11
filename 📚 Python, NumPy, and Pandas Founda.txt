@@ -1,0 +1,58 @@
+📚 Python, NumPy, and Pandas Foundation Notes
+1. Python Lists vs. NumPy Arrays (The Foundation)
+Python Lists: Highly flexible, can hold mixed data types, but are slow because the computer treats them as separate objects. Mathematical operations like multiplication duplicate the elements instead of doing math.
+
+Example: [1, 2, 3] * 2 outputs [1, 2, 3, 1, 2, 3]
+
+NumPy Arrays: Strict, can only hold one uniform data type (e.g., all integers). They run at lightning speed because they use Vectorization—applying math to every single element instantly without a slow for loop.
+
+Example: np.array([1, 2, 3]) * 2 outputs [2, 4, 6]
+
+2. Pandas DataFrames & Series (The Structure)
+DataFrame: A two-dimensional table with labeled rows and columns, exactly like a SQL table or Excel spreadsheet.
+
+Series: A single column extracted from a DataFrame. A DataFrame is essentially a collection of Series glued together.
+
+Index: The automatic column of numbers (0, 1, 2...) on the far left. It acts like a database Primary Key, giving every row a unique address for fast lookups.
+
+3. Row Filtering (The SQL WHERE Clause)
+Pandas filters data using a two-step process called Boolean Masking:
+
+The Inside Condition: df['salary'] > 55000 evaluates every row and generates a temporary list of True or False values.
+
+The Outer Bracket: df[...] acts like a stencil, throwing away the False rows and keeping only the True rows.
+
+SQL Equivalent: SELECT * FROM table WHERE salary > 55000;
+
+Pandas Syntax: df[df['salary'] > 55000]
+
+4. Data Transformations & Column Creation
+You can create new columns effortlessly by applying vectorized math directly to an existing column.
+* SQL Equivalent: SELECT *, salary * 0.10 AS bonus FROM table;
+* Pandas Syntax: df['bonus'] = df['salary'] * 0.10
+
+5. Aggregations & Grouping (Split-Apply-Combine)
+When you aggregate data, Pandas performs a 4-step sequence under the hood:
+
+Data Selection: Grabs the DataFrame (df_dept).
+
+Split: Invisible buckets are created based on unique values (.groupby('department')).
+
+Select: Throws away unrelated columns, keeping only the target (['salary']).
+
+Apply & Combine: Performs the math on each bucket and stitches the final summary back together (.mean()).
+
+SQL Equivalent: SELECT department, AVG(salary) FROM table GROUP BY department;
+
+Pandas Syntax: df_dept.groupby('department')['salary'].mean()
+
+6. Managing Missing Data (NaN)
+Real-world data contains blank slots, represented as NaN (Not a Number). Data Engineers use two main strategies before sending data to Machine Learning models:
+
+.fillna(value): Replaces NaN with a specific metric. A standard ML technique is Mean Imputation (filling gaps with the column's average to keep statistics stable).
+
+Example: df['salary'].fillna(df['salary'].mean())
+
+.dropna(): Drops the entire row containing a missing value.
+
+Rule of Thumb: If you have millions of rows and only a handful are missing, drop them (.dropna()) to avoid introducing artificial/guessed data. If missing data is frequent, fill it (.fillna()).
